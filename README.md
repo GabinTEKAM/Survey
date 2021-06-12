@@ -40,5 +40,6 @@
 
 ## Users Credentials
 
-- username, password (plus any other requested info)
-- username, password (plus any other requested info)
+- lapa, survey2021 
+- nkuate, survey2021 
+- tekam, survey2021 
