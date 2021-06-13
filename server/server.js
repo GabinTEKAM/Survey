@@ -51,7 +51,7 @@ app.post('/api/login', function(req, res, next) {
       return next(err);
       if (!user) {
         // display wrong login messages
-        return res.status(401).json(info);
+        return res.status(401).send(info);
       }
       // success, perform the login
       req.login(user, (err) => {
@@ -60,7 +60,7 @@ app.post('/api/login', function(req, res, next) {
         
         // req.user contains the authenticated user, we send all the user info back
         // this is coming from userDao.getUser()
-        return res.json(req.user);
+        return res.json(req.user.name);
       });
   })(req, res, next);
 });
@@ -76,9 +76,9 @@ app.delete('/api/sessions/current', (req, res) => {
 // check whether the user is logged in or not
 app.get('/api/sessions/current', (req, res) => {
   if(req.isAuthenticated()) {
-    res.status(200).json(req.user);}
+    res.status(200).send(req.user.name);}
   else
-    res.status(401).json({error: 'Unauthenticated user!'});;
+    res.status(401).send({error: 'Unauthenticated user!'});;
 });
 
 
