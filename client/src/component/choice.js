@@ -8,7 +8,7 @@ function Choice(props) {
                 <InputGroup.Prepend>
                     <InputGroup.Radio aria-label="Radio button for following text input" />
                 </InputGroup.Prepend>
-                <FormControl aria-label="Text input with radio button" />
+                <FormControl required />
             </InputGroup>
         </div>
     );
