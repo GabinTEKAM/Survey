@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import Listquestions from './listquestions';
+import SubmitSurvey from './Submitsurvey'
 
 function Survey(props) {
     //state inititalisation 
@@ -11,56 +12,88 @@ function Survey(props) {
         questionFlag: '',
         min: '',
         max: "",
+        mandatory: false,
         choices: [{
-            name: ""
+            label: ""
         }]
     }
-    let t = Array(10).map(a => quest)
-    t = Array.from({ length: 10 }, (_, i) => quest)
     const [surveyTitle, setSurveyTitle] = useState('')
     const [questions, setQuestions] = useState([quest])
     const [validated, setValidated] = useState(false);
-const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const addQuestion = () => {
         setQuestions(old => [...old, quest])
     }
 
+    const setFlag = (question) => {
+        let flag = 0
+        if ((parseInt(question.min) === 0 && parseInt(question.max) === 1))
+            return flag
+        else if ((parseInt(question.min) === 1 && parseInt(question.max) === 1))
+            flag = 1
+        else if (parseInt(question.min) === 1 && parseInt(question.max) > 1)
+            flag = 2
+        else flag = 3
+        switch (flag) {
+            case 0:
+                    question.typeofquestion = "singleChoice"
+                    break
+               
+            case 1:
+                question.mandatory = true
+                question.typeofquestion = "singleChoice"
+                break
+            case 2:
+                question.typeofquestion = "mulltipleChoice"
+                break
+            case 3:
+                question.mandatory = true
+                question.typeofquestion = "mulltipleChoice"
+                break
+            default:
+                break;
+        }
+    }
+
     const handleSubmit = (event) => {
-        let questText = []
-        let questChoice = []
+        let questionText = []
+        let questionChoice = []
         const form = event.currentTarget;
         if (form.checkValidity()) {
+
             event.preventDefault()
             event.stopPropagation()
-            questions.forEach(question => question.label === 'Text' ? questText.push(question) : questChoice.push(question))
-               console.log(`questText`, questText)
-               console.log(`questChoice`, questChoice)
-            try {
-                questChoice.forEach(question => {
-                if (question.min > question.max || question.max>10||question.min>1 ){
-                    throw("Your Survey have an incorrect closed quesdion ")
-                    
+            questions.forEach(question => question.typeofquestion === 'Text' ? questionText.push(question) : questionChoice.push(question))
+            questionChoice.forEach(question => {
+                if (parseInt(question.min) > parseInt(question.max) || parseInt(question.max) > 10 || parseInt(question.min) > 1) {
+                    throw new Error("Your Survey have an incorrect closed quesdion ")
+
                 }
+                else
+                    setFlag(question)
             })
+            
+            try {
+                console.log(`req.body.`, questionChoice)
+               SubmitSurvey({surveyTitle, questionText, questionChoice}).catch(err=>setErrorMessage(err.message)) 
             } catch (error) {
-                setErrorMessage(error)
+                setErrorMessage(error.message)
             }
-               
         }
-        else{
+
+        else {
             event.preventDefault()
             event.stopPropagation()
+            setValidated(true)
         }
-        setValidated(true)
+
     }
 
 
     return (<>
 
         <Form sm={3} validated={validated} noValidate onSubmit={handleSubmit} >
-            {errorMessage?<Alert variant="danger"> {errorMessage} </Alert>:''}
-   
- 
+            {errorMessage ? <Alert variant="danger"> {errorMessage} </Alert> : ''}
             <Form.Group >
                 <Form.Label inline='true '>Survey Title: &nbsp; &nbsp;  </Form.Label>
                 <Form.Control placeholder='text' required type='text' value={surveyTitle} onChange={ev => setSurveyTitle(ev.target.value)} />

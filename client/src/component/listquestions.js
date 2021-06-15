@@ -8,7 +8,7 @@ function Listquestions(props) {
     return (
         <div>
             {questions.map((question, index )=>
-                <Question key= {index} index={index} question={question} setQuestions={setQuestions}
+                <Question key= {index} index={index} question={question} questions={questions} setQuestions={setQuestions}
                   />
             )}
         </div>

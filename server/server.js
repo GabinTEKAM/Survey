@@ -2,7 +2,6 @@
 
 const express = require('express');
 const morgan = require('morgan');
-const { Survey } = require('./record');
 const surveyDao = require('./choices');
 
 // init express
@@ -13,10 +12,32 @@ app.use(express.json())
 
 
 app.post("/api/survey", (req, res) => {
-
-  surveyDao.survey(req.body,)
+  surveyDao.survey(req.body, 3)
     .then(result => {
-      res.status(209).send(result)
+      res.json(result)
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    })
+
+})
+
+app.post("/api/question", (req, res) => {
+  console.log(`req.body.question`, req.body.question)
+  surveyDao.question(req.body.question, req.body.idSurvey)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      res.status(500).send(err)
+    })
+
+})
+
+app.post("/api/choice", (req, res) => {
+  surveyDao.choice(req.body.choice, req.body.idQuestion)
+    .then(result => {
+      res.json(result)
     })
     .catch(err => {
       res.status(500).send(err)
@@ -26,7 +47,6 @@ app.post("/api/survey", (req, res) => {
 
 
 app.post("/api", (req, res) => {
-  console.log(`object`, req.body)
 })
 
 // activate the server

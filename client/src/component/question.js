@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Card, InputGroup, Form } from 'react-bootstrap';
 import Number from './numberanswer';
 import QuestionBody from './questionbody';
@@ -6,19 +6,12 @@ import QuestionTitle from './questiontitle';
 import Selectype from './selecttype';
 
 function Question(props) {
-    const {  index, question, setQuestions } = props
+    const {  index, question, setQuestions, questions } = props
     const questType = question.typeofquestion
     const choice = {
-        name: ""
+        label: ""
     }
-    const questionTitle = (index, value) => {
-        setQuestions(old => {
-            let label = old[index]
-            label.label = value
-            old.splice(index, 1, label)
-            return [...old]
-        })
-    }
+    
     const questionAttribut = (index, value, name) => {
         setQuestions(old => {
             let label = old[index]
@@ -28,11 +21,7 @@ function Question(props) {
         })
     }
     const deleteQuestion = (index) => {
-        setQuestions(old => {
-
-            old.splice(index, 1)
-            return [...old]
-        })
+        setQuestions(old => [...old.slice(0, index), ...old.slice(index + 1)])
     }
     const typeOfQuestion = (index, value) => {
         setQuestions(old => {
@@ -41,18 +30,19 @@ function Question(props) {
                 delete label.choices
                 delete label.max
                 delete label.min }
-            else {
-               label.choices = [choice]          
-            }
+            else 
+             {  label.choices = [choice]          
+               label.max = ""
+                label.min =""}
             label.typeofquestion = value
             old.splice(index, 1, label)
             return [...old]
         })
     }
-    const choicesTitle = (index, value) => {
+    const choicesTitle = (index,indexC,  value) => {
         setQuestions(old => {
             let label = old[index]
-            label.label = value
+            label.choices[indexC].label = value
             old.splice(index, 1, label)
             return [...old]
         })
@@ -84,12 +74,12 @@ function Question(props) {
                     <Selectype index={index} typeOfQuestion={typeOfQuestion} />
                 </Card.Header>
                 <Card.Body>
-                    <Number.Minimun index={index} question={question} questionAttribut={questionAttribut} />
-                    <Number.Maximun index={index} question={question} questionAttribut={questionAttribut} />
-                    <QuestionBody questType={questType} question={question} />
+                      {questType!=='Text'&&<><Number.Minimun index={index} question={question} questionAttribut={questionAttribut} />
+                    <Number.Maximun index={index} question={question} questionAttribut={questionAttribut} /></>}
+                    <QuestionBody questType={questType} question={question} choicesTitle={choicesTitle} indexQuest={index} />
                    {questType==='Text'?"":<Button variant="success" size="lg" className="fixed-right-bottom" onClick={() => addChoices(index)}>&#43;</Button>} 
                 </Card.Body>
-                <button variant='warning' onClick={() => deleteQuestion(index)}>delete</button>
+                {questions.length>1&& <button variant='warning' onClick={() => deleteQuestion(index)}>delete</button>}
             </Card>
         </div>
     );
