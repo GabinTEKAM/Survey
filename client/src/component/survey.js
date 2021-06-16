@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import Listquestions from './listquestions';
 import SubmitSurvey from './Submitsurvey'
-import Test from './test';
 
 function Survey(props) {
     //state inititalisation 

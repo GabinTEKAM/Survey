@@ -1,4 +1,6 @@
-const {db} = require('./db');
+const db = require("./db");
+
+
 
 exports.choice = (label, idQuestion)=>{ 
     console.log(`choice`, label)
@@ -31,11 +33,13 @@ exports.question=(question, idSurvey)=>{
 
 
   exports.survey =(label, idAdmin) => {
+      console.log(`label, idAdmin`, label, idAdmin)
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO survey (label ,idAdmin) VALUES(?,?)';
+        const query = 'INSERT INTO survey (label,idAdmin) VALUES(?,?)';
+        console.log(`db`, db)
+        
         db.run(query, [label.label, idAdmin],  function (err) {
             if(err){
-                console.log(`err`, err.message)
                 reject(err);}
             else
                 resolve(this.lastID);
