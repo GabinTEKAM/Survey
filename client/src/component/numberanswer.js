@@ -8,7 +8,8 @@ function Minimun(props) {
         <Form.Group >
             <Form.Control type='number' min='0' max="1" 
                 name="min"
-                required placeholder='Min answer'
+                required 
+                placeholder='Min answer'
                 value={question.min}
                 onChange={event => questionAttribut(index, event.target.value,event.target.name)}
             ></Form.Control>
@@ -19,12 +20,13 @@ function Minimun(props) {
 }
  function Maximun(props) {
     const {index, questionAttribut, question}= props
+    
     return (
         <Form.Group >
             <Form.Control type='number' min='1' max="10"
             required
                 name='max'
-                required placeholder='maximum  of answer'
+                placeholder='maximum  of answer'
                 value={question.max}
                 onChange={event => questionAttribut(index, event.target.value,event.target.name)}
             ></Form.Control>

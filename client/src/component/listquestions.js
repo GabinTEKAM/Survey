@@ -10,7 +10,6 @@ function Listquestions(props) {
 
             const movedItem = old.find((item, index) => index === from);
             const remainingItems = old.filter((item, index) => index !== from);
-            console.log(`movedItem, remainingItems`, movedItem, remainingItems)
             return [
                 ...remainingItems.slice(0, to),
                 movedItem,
