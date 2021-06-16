@@ -3,10 +3,8 @@ const {surveyValidation , validate } = require('./validator.js')
 const express = require('express');
 const session = require('express-session');
 const morgan = require('morgan');
-const morgan = require('morgan');
 const surveyDao = require('./choices');
 const { oneOf } = require('express-validator');
-const session = require('express-session');
 
 //configured passport 
 const  passport  = require('./passport');
