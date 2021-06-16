@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import Listquestions from './listquestions';
 import SubmitSurvey from './Submitsurvey'
+import Test from './test';
 
 function Survey(props) {
     //state inititalisation 
@@ -98,8 +99,8 @@ function Survey(props) {
                 <Form.Label inline='true '>Survey Title: &nbsp; &nbsp;  </Form.Label>
                 <Form.Control placeholder='text' required type='text' value={surveyTitle} onChange={ev => setSurveyTitle(ev.target.value)} />
             </Form.Group>
-            <Listquestions questions={questions} setQuestions={setQuestions}
-            />
+            <Listquestions questions={questions} setQuestions={setQuestions} />
+            
             <Button variant="success" type='submit'>Submit</Button>
         </Form>
         <Button variant="success" size="lg" className="fixed-right-bottom" onClick={addQuestion}>&#43;</Button>

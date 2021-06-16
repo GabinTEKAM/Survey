@@ -1,8 +1,9 @@
 'use strict';
-
+const {surveyValidation , validate } = require('./validator.js')
 const express = require('express');
 const morgan = require('morgan');
 const surveyDao = require('./choices');
+const { oneOf } = require('express-validator');
 
 // init express
 const app = new express();
@@ -19,16 +20,14 @@ app.post("/api/survey", (req, res) => {
     .catch(err => {
       res.status(500).send(err)
     })
-
 })
-
-app.post("/api/question", (req, res) => {
-  console.log(`req.body.question`, req.body.question)
+app.post("/api/question",(req, res) => {
   surveyDao.question(req.body.question, req.body.idSurvey)
     .then(result => {
       res.json(result)
     })
     .catch(err => {
+      console.log(`err`, err)
       res.status(500).send(err)
     })
 
