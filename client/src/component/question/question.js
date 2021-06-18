@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, InputGroup, Form } from 'react-bootstrap';
+import { Button, Card, } from 'react-bootstrap';
 import Number from './numberanswer';
 import QuestionBody from './questionbody';
 import QuestionTitle from './questiontitle';
@@ -23,9 +23,13 @@ function Question(props) {
     const deleteQuestion = (index) => {
         setQuestions(old => [...old.slice(0, index), ...old.slice(index + 1)])
     }
+
     const typeOfQuestion = (index, value) => {
         setQuestions(old => {
+            console.log(`old`, old)
+
             let label = old[index]
+            console.log(`label `, label )
             if (value === "Text"){
                 delete label.choices
                 delete label.max
@@ -35,14 +39,17 @@ function Question(props) {
                label.max = ""
                 label.min =""}
             label.typeofquestion = value
+            console.log(`label`, label)
+            console.log(` old.splice(index, 1, label)`,  old.splice(index, 1, label))
             old.splice(index, 1, label)
+            console.log(`[...old]`, [...old])
             return [...old]
-        })
+        }) 
     }
     const choicesTitle = (index,indexC,  value) => {
         setQuestions(old => {
             let label = old[index]
-            label.choices[indexC].label = value
+            label.choices[indexC] = value
             old.splice(index, 1, label)
             return [...old]
         })

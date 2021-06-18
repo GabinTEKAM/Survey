@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import "../css/login.css";
 import { Alert, Button, Card, Form, InputGroup } from 'react-bootstrap';
-import {  Key, PersonCircle, } from 'react-bootstrap-icons';
-import API from '../API/API'
+import { Key, PersonCircle, } from 'react-bootstrap-icons';
+import API from '../API/API-LOGIN'
 
 function Login(props) {
   const [username, setUsername] = useState('')
@@ -10,21 +10,24 @@ function Login(props) {
   const [validated, setValidated] = useState(false)
   const [ErrorMessage, setErrorMessage] = useState("")
 
+
   const login = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity()) {
-      
       event.preventDefault()
       event.stopPropagation();
-        API.login(username, password)
-        .catch(err=>setErrorMessage(err))
-     
+      API.login(username, password)
+        .then((e)=>{
+          props.setUsername(e)
+        props.setLoggedIn(true)})
+        .catch(err => setErrorMessage(err))
+
     }
-    else{
+    else {
       event.preventDefault()
       event.stopPropagation();
     }
-    
+
     setValidated(true)
   }
   return (
@@ -36,7 +39,7 @@ function Login(props) {
         </Card.Header>
         <Card.Body>
           <Form validated={validated} noValidate onSubmit={login}>
-            {ErrorMessage? <Alert variant='danger'>{ErrorMessage}  </Alert>: "" }
+            {ErrorMessage ? <Alert variant='danger'>{ErrorMessage}  </Alert> : ""}
             <Form.Group>
               <InputGroup hasValidation className="mb-3" >
                 <InputGroup.Prepend>

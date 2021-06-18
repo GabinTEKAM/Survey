@@ -10,7 +10,6 @@ function QuestionTitle(props) {
         name='label'
             placeholder="question label"
             required 
-            value= {question?question['label']:''}
             onChange={event => questionAttribut(index, event.target.value,event.target.name)}
         />
     </InputGroup>

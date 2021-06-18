@@ -1,4 +1,5 @@
 import Axios from 'axios'
+
 const Survey = async (label) => {
   let response = await Axios.post('/api/survey', {
     label
@@ -10,7 +11,7 @@ const Survey = async (label) => {
 }
 
 const Question = async (question) => {
-    
+   
   let response = await Axios.post('/api/question', 
     question, 
   )
@@ -21,8 +22,8 @@ const Question = async (question) => {
   else
     throw response.data
 }
-const Choice = async (choices) => {
-  let response = await Axios.post('/api/choice', choices)
+const QuestionChoice = async (question) => {
+  let response = await Axios.post('/api/questionchoice', question)
   if (response.statusText === 'OK')
     return response.data
   else
@@ -31,6 +32,6 @@ const Choice = async (choices) => {
 
 
 
-const API = { Survey, Question, Choice }
+const apiQuestion = { Survey, Question, QuestionChoice }
 
-export default API
+export default apiQuestion
