@@ -15,6 +15,12 @@ const port = 3001;
 
 app.use(morgan('dev'))
 app.use(express.json())
+
+app.use(session({
+  secret: 'this and that and other',
+  resave: false,
+  saveUninitialized: false,
+}));
 // tell passport to use session cookies
 app.use(passport.initialize());
 app.use(passport.session());
@@ -25,18 +31,9 @@ const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()){
  
     return next();}
-  console.log(`req.session.passport`, req.session)
-  console.log(`req.user.name`, req.session.passport.user)
-   console.log(`req`, req.isAuthenticated())
   return res.status(401).json({ error: 'not authenticated' });
 }
 
-
-app.use(session({
-  secret: 'this and that and other',
-  resave: false,
-  saveUninitialized: false,
-}));
 
 
 
@@ -84,7 +81,7 @@ app.get('/api/sessions/current', (req, res) => {
 /**
  * routes for saving survey information
  */
-app.post("/api/survey", (req, res) => {
+app.post("/api/survey",isLoggedIn, (req, res) => {
   // first I will pick the Id of admin to pass to request
   console.log(`req.session`, req.session)
   surveyDao.survey(req.body, 3)
