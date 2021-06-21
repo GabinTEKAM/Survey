@@ -10,7 +10,7 @@ function Survey(props) {
         min: '',
         max: "",
         mandatory: false,
-        choices: ['']
+        choices: [""]
     }
     const [surveyTitle, setSurveyTitle] = useState('')
     const [questions, setQuestions] = useState([quest])

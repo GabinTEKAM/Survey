@@ -4,10 +4,10 @@ const express = require('express');
 const session = require('express-session');
 const morgan = require('morgan');
 const surveyDao = require('./choices');
-const { oneOf } = require('express-validator');
 
 //configured passport 
 const  passport  = require('./passport');
+const surveyAnswer = require('./surveyAnswer.js');
 
 // init express
 const app = new express();
@@ -35,7 +35,7 @@ const isLoggedIn = (req, res, next) => {
 app.use(session({
   secret: 'this and that and other',
   resave: false,
-  saveUninitialized: false, 
+  saveUninitialized: false,
 }));
 
 
@@ -120,8 +120,34 @@ app.post("/api/questionchoice",choiceValidation, validate, (req, res) => {
 
 })
 
+//get all the surveys
+app.get('/api/survey',(req, res)=>{
+  surveyAnswer.getSurvey()
+  .then( task => {
+      if(!task)
+          res.status(404).send();
+       else 
+          res.json(task);
 
+  }).catch(err => res.status(500).json(err));
+})
 
+//get all the questions of a related giveen Id
+
+app.get('/api/questions/:id',(req, res)=>{
+  console.log(`req.params.id`, req.params.id)
+  surveyAnswer.getQuestions(req.params.id)
+  .then( survey => {
+    console.log(`server`, survey)
+      if(!survey)
+          res.status(404).send();
+       else 
+          res.json(survey);
+
+  }).catch(err =>{
+    console.log(`errfake`, err)
+    res.status(500).json(err)});
+})
 
 
 

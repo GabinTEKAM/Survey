@@ -6,16 +6,14 @@ import QuestionTitle from './questiontitle';
 import Selectype from './selecttype';
 
 function Question(props) {
-    const {  index, question, setQuestions, questions } = props
+    const { index, question, setQuestions, questions } = props
     const questType = question.typeofquestion
-    const choice = {
-        label: ""
-    }
-    
+    const choice = ['']
+
     const questionAttribut = (index, value, name) => {
         setQuestions(old => {
             let label = old[index]
-            label[name ]= value
+            label[name] = value
             old.splice(index, 1, label)
             return [...old]
         })
@@ -29,24 +27,26 @@ function Question(props) {
             console.log(`old`, old)
 
             let label = old[index]
-            console.log(`label `, label )
-            if (value === "Text"){
+            console.log(`label `, label)
+            if (value === "Text") {
                 delete label.choices
                 delete label.max
-                delete label.min }
-            else 
-             {  label.choices = [choice]          
-               label.max = ""
-                label.min =""}
+                delete label.min
+            }
+            else {
+                label.choices = [choice]
+                label.max = ""
+                label.min = ""
+            }
             label.typeofquestion = value
             console.log(`label`, label)
-            console.log(` old.splice(index, 1, label)`,  old.splice(index, 1, label))
+            console.log(` old.splice(index, 1, label)`, old.splice(index, 1, label))
             old.splice(index, 1, label)
             console.log(`[...old]`, [...old])
             return [...old]
-        }) 
+        })
     }
-    const choicesTitle = (index,indexC,  value) => {
+    const choicesTitle = (index, indexC, value) => {
         setQuestions(old => {
             let label = old[index]
             label.choices[indexC] = value
@@ -57,16 +57,11 @@ function Question(props) {
 
     const addChoices = (index) => {
         setQuestions(old => {
-            let items = old[index].choices
-            if (items) {
-                old.splice(index, 1, { ...old[index], choices: [...items, choice] })
-                console.log('valide');
-            }
-            else {
-                console.log('false');
-                old.splice(index, 1, { ...old[index], choices: [choice] })
-            }
-            return [...old]
+            let modifyItem ={... old[index]}
+            console.log(`modifyItem`, modifyItem)
+            modifyItem.choices = [...modifyItem.choices, ""]
+            return [...old.slice(0, index), modifyItem, ...old.slice(index + 1)]
+
         })
     }
 
@@ -81,12 +76,12 @@ function Question(props) {
                     <Selectype index={index} typeOfQuestion={typeOfQuestion} />
                 </Card.Header>
                 <Card.Body>
-                      {questType!=='Text'&&<><Number.Minimun index={index} question={question} questionAttribut={questionAttribut} />
-                    <Number.Maximun index={index} question={question} questionAttribut={questionAttribut} /></>}
+                    {questType !== 'Text' && <><Number.Minimun index={index} question={question} questionAttribut={questionAttribut} />
+                        <Number.Maximun index={index} question={question} questionAttribut={questionAttribut} /></>}
                     <QuestionBody questType={questType} question={question} choicesTitle={choicesTitle} indexQuest={index} />
-                   {questType==='Text'?"":<Button variant="success" size="lg" className="fixed-right-bottom" onClick={() => addChoices(index)}>&#43;</Button>} 
+                    {questType === 'Text' ? "" : <Button variant="success" size="lg" className="fixed-right-bottom" onClick={() => addChoices(index)}>&#43;</Button>}
                 </Card.Body>
-                {questions.length>1&& <button variant='warning' onClick={() => deleteQuestion(index)}>delete</button>}
+                {questions.length > 1 && <button variant='warning' onClick={() => deleteQuestion(index)}>delete</button>}
             </Card>
         </div>
     );
