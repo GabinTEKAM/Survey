@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import  {Listquestions, Submit, Form, Button, Alert} from '../exportpkg'
+import { Listquestions, Submit, Form, Button, Alert, Redirect } from '../exportpkg'
 
 function Survey(props) {
     //state inititalisation 
@@ -16,17 +16,16 @@ function Survey(props) {
     const [questions, setQuestions] = useState([quest])
     const [validated, setValidated] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [submitted, setSubmitted] = useState(false)
     const addQuestion = () => {
         setQuestions(old => [...old, quest])
     }
 
-   
+
     const handleSubmit = (event) => {
         let questionText = []
         let questionChoice = []
-        console.log(`event`, event)
         const form = event.currentTarget;
-        console.log(`form.checkValidity()`, form.checkValidity())
         if (form.checkValidity()) {
 
             event.preventDefault()
@@ -41,29 +40,38 @@ function Survey(props) {
                 }
             })
 
-            questionChoice.forEach(question => {
-                if (parseInt(question.min) > parseInt(question.max) || parseInt(question.max) > 10 || parseInt(question.min) > 1) {
-                    throw new Error("Your Survey have an incorrect closed quesdion ")
+
+
+            try {
+                questionChoice.forEach(question => {
+
+                    if (parseInt(question.min) > parseInt(question.max) || parseInt(question.min) < 0) {
+                        throw ("Your Survey have an incorrect closed quesdion ")
+                    }
+                    else
+                        Submit.setFlag(question)
 
                 }
-                else
-                   Submit.setFlag(question)
-            })
+                )
+                Submit.SubmitSurvey({ surveyTitle, questionText, questionChoice })
+                    .then(setSubmitted(true))
+            } catch (error) {
+                setErrorMessage(error)
+            }
 
-           Submit.SubmitSurvey({ surveyTitle, questionText, questionChoice }).catch(err => setErrorMessage(err.message))
         }
 
         else {
             event.preventDefault()
             event.stopPropagation()
-            setValidated(true)
-        }
 
+        }
+        setValidated(true)
     }
 
 
     return (<>
-
+        {submitted && <Redirect to='/mysurvey' />}
         <Form sm={3} validated={validated} noValidate onSubmit={handleSubmit} >
             {errorMessage ? <Alert variant="danger"> {errorMessage} </Alert> : ''}
             <Form.Group >
@@ -74,6 +82,7 @@ function Survey(props) {
             <Button variant="success" type='submit'>Submit</Button>
         </Form>
         <Button variant="success" size="lg" className="fixed-right-bottom" onClick={addQuestion}>&#43;</Button>
+       
     </>
     );
 }

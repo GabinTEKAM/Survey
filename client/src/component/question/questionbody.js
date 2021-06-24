@@ -1,12 +1,12 @@
 import React from 'react';
-import Choice from './choice';
-import QuestionText from './questiontext';
+import { Choice, QuestionText} from './QuestionComponent'
 
 function QuestionBody(props) {
-    let {questType, question, choicesTitle, indexQuest}=props
-    console.log(`questType`, questType)
+    let {questType, question, choicesTitle, indexQuest, questionAttribut, deleteChoice}=props
     return (<>
-      {questType==="Radio"? question.choices.map((a, index) => <Choice key={index} index={index} choicesTitle={choicesTitle} indexQuest={indexQuest} />):<QuestionText />}
+      {questType==="Radio"? question.choices.map((a, index) => 
+      <Choice key={index} index={index} choicesTitle={choicesTitle} deleteChoice={deleteChoice} indexQuest={indexQuest} />)
+      :<QuestionText questionAttribut={questionAttribut} indexQuest={indexQuest} />}
        
    </> );
 }

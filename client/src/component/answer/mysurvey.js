@@ -1,23 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
-import { TableHeader, TableRow } from './tablesurvey';
 import APISURVEY from '../../API/API-SURVEY';
-
-function ListOfSurvey(props) {
-    const { ListOfSurveys } = props
-    return (
-        <Table  striped bordered hover responsive>
-            <TableHeader />
-            <tbody>
-                {ListOfSurveys.map((survey, index) =>
-                    <TableRow key={index} survey={survey} /> )}
-           
-            </tbody>
-        </Table>
-    );
-}
-
-
+import { TableHeader, TableRow } from './tablesurvey';
 
 function MySurvey(props) {
     const [loading, setLoading] = useState(false)
@@ -33,10 +17,15 @@ function MySurvey(props) {
         getSurvey()
     }, [])
     return (<>
-        {loading ? 
-        <ListOfSurvey ListOfSurveys={MySurveys} />
+        {loading ? <Table striped bordered hover responsive>
+                <TableHeader />
+            <tbody>
+
+           { MySurveys.map((survey, index) => <TableRow survey={survey} key={index}/> ) }
+             </tbody>   
+            </Table>
         : 'loading'}
     </>);
 }
 
-export  {MySurvey, ListOfSurvey};
+export default MySurvey;

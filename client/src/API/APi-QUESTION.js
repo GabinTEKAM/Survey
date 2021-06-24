@@ -15,13 +15,13 @@ const Question = async (question) => {
   let response = await Axios.post('/api/question', 
     question, 
   )
-  console.log(`response.statusText`, response)
 
   if (response.statusText === 'OK')
     return response.data
   else
     throw response.data
 }
+
 const QuestionChoice = async (question) => {
   let response = await Axios.post('/api/questionchoice', question)
   if (response.statusText === 'OK')

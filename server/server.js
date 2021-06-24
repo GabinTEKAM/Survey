@@ -83,8 +83,7 @@ app.get('/api/sessions/current', (req, res) => {
  */
 app.post("/api/survey",isLoggedIn, (req, res) => {
   // first I will pick the Id of admin to pass to request
-  console.log(`req.session`, req.session)
-  surveyDao.survey(req.body, 3)
+  surveyDao.survey(req.body,req.user.idAdmin)
     .then(result => {
       res.json(result)
     })
@@ -94,7 +93,7 @@ app.post("/api/survey",isLoggedIn, (req, res) => {
     })
 })
 
-app.post("/api/question",validatequestionText, validate,  (req, res) => {
+app.post("/api/question",isLoggedIn, validatequestionText, validate,  (req, res) => {
   surveyDao.question(req.body.question, req.body.idSurvey)
     .then(result => {
       res.json(result)
@@ -105,7 +104,7 @@ app.post("/api/question",validatequestionText, validate,  (req, res) => {
 
 })
 
-app.post("/api/questionchoice",choiceValidation, validate, (req, res) => {
+app.post("/api/questionchoice",isLoggedIn, choiceValidation, validate, (req, res) => {
   surveyDao.question(req.body.question, req.body.idSurvey)
     .then(result => {
       res.json(result)
@@ -129,6 +128,27 @@ app.get('/api/survey',(req, res)=>{
   }).catch(err => res.status(500).json(err));
 })
 
+//get list of survey
+app.get('/api/mysurveys',isLoggedIn,(req,res) => {
+  console.log(`req.user`, req.user)
+  surveyAnswer.mySurveys(req.user.idAdmin)
+  .then( survey => {
+      if(!survey)
+          res.status(404).send();
+       else 
+          res.json(survey);})
+})
+
+app.get('/api/getuseranswers/:idSurvey',(req,res) => {
+  surveyAnswer.getUserAnswers(req.params.idSurvey)
+  .then( survey => {
+      if(!survey)
+          res.status(404).send();
+       else 
+          res.json(survey);})
+}
+)
+
 //get all the questions of a related giveen Id
 
 app.get('/api/questions/:id',(req, res)=>{
@@ -146,7 +166,33 @@ app.get('/api/questions/:id',(req, res)=>{
     res.status(500).json(err)});
 })
 
+//store username
+app.post('/api/user', (req, res)=>{
+  surveyAnswer.user(req.body.name)
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.log(`err`, err)
+      res.status(500).send(err)
+    })
 
+}
+)
+
+app.post('/api/answer', (req, res)=>{
+  console.log(`req.body`, req.body)
+  surveyAnswer.answer (req.body.idUser, req.body.response )
+    .then(result => {
+      res.json(result)
+    })
+    .catch(err => {
+      console.log(`err`, err)
+      res.status(500).send(err)
+    })
+
+}
+)
 
 
 

@@ -11,9 +11,22 @@ const getSurveys = async () => {
 
 }
 const getQuestions = async(idSurvey) =>{
-    console.log(`idSurvey`, idSurvey)
     const response = await axios.get(`/api/questions/${idSurvey}`)
     return response.data
 }
 
-export { getSurveys, getQuestions}
+const getMySurvey = async()=>{
+    const response = await axios.get(`/api/mysurveys`)
+    return response.data
+}
+const saveUser = async(name)=>{
+    const response = await axios.post(`/api/user`, name)
+    return response.data
+}
+const saveanswer = async(answer)=>{
+    const response = await axios.post(`/api/answer`, answer)
+    return response.data
+}
+
+
+export default { getSurveys, getQuestions, getMySurvey, saveUser, saveanswer}
