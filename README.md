@@ -225,7 +225,7 @@ Error responses: 422 Unprocessable Entity (values do not satisfy validators), 50
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.jpg)
+![Screenshot](img/question.JPG)
 
 ## Users Credentials
 
