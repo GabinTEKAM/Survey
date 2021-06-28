@@ -3,6 +3,7 @@ import APISURVEY from "../../API/API-SURVEY";
 import { UserResponse } from './getUserResponse';
 import { Pagination } from "react-custom-pagination";
 import { useLocation } from 'react-router-dom';
+import Loader from '../../loader';
 
 
 function ConsultResponse(props) {
@@ -68,7 +69,7 @@ function ConsultResponse(props) {
                         />
                     </div>
                  </>
-                : 'loading'
+                : <Loader />
 
             }
         </>

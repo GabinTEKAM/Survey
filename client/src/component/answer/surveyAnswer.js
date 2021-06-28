@@ -4,6 +4,7 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import APISURVEY from '../../API/API-SURVEY';
 import { ConFrmModal, Username } from './modal';
 import { useLocation } from 'react-router-dom';
+import Loader from '../../loader';
 
 
 function SurveyAnswer(props) {
@@ -40,9 +41,7 @@ function SurveyAnswer(props) {
                 if (!user) throw "fill in your name"
                 questions.forEach((question) => {
                     if (question.typeofquestion !== 'Text') {
-                        console.log(`question.min < Response[question.idQuestion].length`, question.min < Response[question.idQuestion].length)
                         if (question.min > Response[question.idQuestion].length
-                            // || question.max < Response[question.idQuestion].length
                             ) {
                             throw (`check answer of question ${question.rank} `)
                         }
@@ -89,7 +88,7 @@ function SurveyAnswer(props) {
                     <Button variant="success" type='submit' className='submit' >Submit</Button>
                 </Form>
 
-            </> : "loadign"}
+            </> : <Loader />}
         </div>
     );
 }

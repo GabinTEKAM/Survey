@@ -11,6 +11,7 @@ import API from './API/API-LOGIN';
 import {MySurvey, ListOfSurvey} from './component/answer/lisofsurvey'
 import ConsultResponse from './component/answer/consultResponse';
 
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -52,9 +53,10 @@ function App() {
                   <Route path='/' exact>
                     {loading ? <ListOfSurvey ListOfSurveys={ListOfSurveys} /> : 'Loading'}
                   </Route>
-                  <Route path='/addsurvey'>
-                    <Survey />
-                  </Route>
+                  <Route path='/addsurvey' render={() => { 
+                   return loggedIn ? <Survey /> : <Login setLoggedIn={setLoggedIn} setUsername={setUsername}/>}} >
+                     </Route>
+                    
                   <Route path='/login' render={() => {
                    return loggedIn ?<Redirect to= 'mysurvey' />:  <Login setLoggedIn={setLoggedIn} setUsername={setUsername} />
                   }}>
@@ -68,8 +70,8 @@ function App() {
                    return loggedIn ? <MySurvey />:  <Login setLoggedIn={setLoggedIn} setUsername={setUsername} />
                   }} />
 
-                  <Route path="/viewResponses/survey/:idsurvey" render={({ match }) =>
-                    <ConsultResponse key={match.params.idsurvey} idSurvey={match.params.idsurvey} />
+                  <Route path="/viewResponses/survey/:idsurvey" render={({ match }) =>{
+                  return loggedIn ?  <ConsultResponse key={match.params.idsurvey} idSurvey={match.params.idsurvey} /> :< Login setLoggedIn={setLoggedIn} setUsername={setUsername} /> }
                   } />
 
                    

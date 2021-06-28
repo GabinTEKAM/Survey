@@ -78,10 +78,13 @@ function Survey(props) {
         {submitted && <ConFrmModal message={submissionMessage} />}
         <Form sm={3} validated={validated} noValidate onSubmit={handleSubmit} >
             {errorMessage ? <Alert variant="danger"> {errorMessage} </Alert> : ''}
-            <Form.Group >
-                <Form.Label inline='true '>Survey Title: &nbsp; &nbsp;  </Form.Label>
-                <Form.Control placeholder='text' required type='text' value={surveyTitle} onChange={ev => setSurveyTitle(ev.target.value)} />
-            </Form.Group>
+            <div className= "wrap-survey-question">
+
+           
+            <div className="survey-group">
+                <Form.Control placeholder='Survey Title' required type='text' value={surveyTitle} onChange={ev => setSurveyTitle(ev.target.value)} />
+            </div>
+             </div>
             <Listquestions questions={questions} setQuestions={setQuestions} />
             <Button variant="success" type='submit' className='submit'>Submit</Button>
         </Form>

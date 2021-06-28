@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Navbar, Nav, NavDropdown, } from 'react-bootstrap'
+import { Navbar, Nav, NavDropdown,Button } from 'react-bootstrap'
 import { PersonCircle } from 'react-bootstrap-icons';
 import { NavLink } from 'react-router-dom'
 import { UserContext } from './userContext';
@@ -17,8 +17,8 @@ function NavBar(props) {
                
 
                 <Nav    >
-                    <NavLink to="/addsurvey">New survey </NavLink>
-                    <NavLink to="/addsurvey">Pricing</NavLink>
+                 <NavLink to="/addsurvey"><Button variant="light">New survey </Button></NavLink>
+                 <NavLink to="/mysurvey"><Button variant="light"> Main list</Button>  </NavLink>
                 </Nav> 
                 </Navbar.Collapse>
                 <Nav bsPrefix='right-nav'>

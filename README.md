@@ -231,4 +231,3 @@ Error responses: 422 Unprocessable Entity (values do not satisfy validators), 50
 
 - lapa, survey2021 
 - nkuate, survey2021 
-- tekam, survey2021 

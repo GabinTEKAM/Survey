@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { CheckboxAnswer, RadioAnswer, TextAnswer } from './TypeOfAnswer';
+import { CheckboxAnswer, RadioAnswer, TextAnswer } from './typeofanswer';
 
 
 function AnswerBody(props) {

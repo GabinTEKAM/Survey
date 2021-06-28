@@ -2,6 +2,7 @@ import React, {  useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { TableHeader, TableRow } from './tablesurvey';
 import APISURVEY from '../../API/API-SURVEY';
+import Loader from '../../loader';
 
 function ListOfSurvey(props) {
     const { ListOfSurveys } = props
@@ -35,7 +36,7 @@ function MySurvey(props) {
     return (<>
         {loading ?
             <ListOfSurvey ListOfSurveys={MySurveys} />
-            : 'loading'}
+            : <Loader />}
     </>);
 }
 

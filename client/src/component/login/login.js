@@ -17,11 +17,17 @@ function Login(props) {
     if (form.checkValidity()) {
       event.preventDefault()
       event.stopPropagation();
-      API.login(username, password)
-        .then((e)=>{
-          props.setUsername(e)
-        props.setLoggedIn(true)})
-        .catch(setErrorMessage)
+      if (username.trim() === '' || password.trim() === '' || password.length < 6)
+        setErrorMessage('Invalid Username or Password')
+      else {
+        API.login(username, password)
+          .then((e) => {
+            props.setUsername(e)
+            props.setLoggedIn(true)
+          })
+          .catch(setErrorMessage)
+      }
+
 
     }
     else {
@@ -44,7 +50,7 @@ function Login(props) {
             <Form.Group>
               <InputGroup hasValidation className="mb-3" >
                 <InputGroup.Prepend>
-                  <InputGroup.Text><PersonCircle  size={40} /></InputGroup.Text>
+                  <InputGroup.Text><PersonCircle size={40} /></InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
                   required
@@ -61,7 +67,7 @@ function Login(props) {
             <Form.Group>
               <InputGroup hasValidation className="mb-3" >
                 <InputGroup.Prepend>
-                  <InputGroup.Text ><Key  size={40}></Key > </InputGroup.Text>
+                  <InputGroup.Text ><Key size={40}></Key > </InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
                   required

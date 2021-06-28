@@ -8,7 +8,6 @@ function Username(props) {
     const [show, setShow] = useState(true);
     const [validated, setValidated] = useState(false)
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     const handleSubmit = (event) => {
         event.preventDefault()
         event.stopPropagation()
