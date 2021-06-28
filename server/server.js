@@ -1,5 +1,5 @@
 'use strict';
-const { surveyValidation, validate, validatequestionText, choiceValidation, answer, Surveytitle } = require('./validator.js')
+const { validate, validatequestionText, choiceValidation, answer, Surveytitle } = require('./validator.js')
 const express = require('express');
 const session = require('express-session');
 const morgan = require('morgan');

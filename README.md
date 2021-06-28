@@ -146,33 +146,55 @@ Response body: One object describing the required task:
     'with an untraceable interface ID',
   ]
 }]
+Error responses: 500 Internal Server Error (generic error)
 
-HTTP method: GET URL: /api/tasks/:id
-Description: Get the task corresponding to the id (if it belongs to the current logged user)
+
+### get users answer 
+HTTP method: GET URL: /api/getuseranswers/:idSurvey
+Description: Get the answers corresponding to the idSurvey belonging to the current logged user
+Request body: None
+Response: 200 OK (success)
+Response body:
+[{
+"idAnswer":12, 
+"idSurvey":49, 
+"userName":"gabino", 
+"responses": "{\"59\":[],\"60\":[\"Average revenue per purchase\",\" Total number of customers\"],\"61\":[\"A system cannot guarantee Consistency, Availability and Partition tolerance simultaneously\"],\"62\":[\"Total extent of fire\"],\"63\":[\"The recall for class “circle” is 6/7\"]}"
+}]
+Error responses: 500 Internal Server Error (generic error)
+
+
+## get short object question 
+HTTP method: GET URL: /api/questionsofsurvey/:id
+Description: Get the questions corresponding to the id theuir idQuestions and label  (if it belongs to the current logged user)
 Request body: None
 Response: 200 OK (success)
 Response body: One object describing the required task:
 [{
-    "id": 2,
-    "description": "Go for a walk",
-    "important": 1,
-    "private": 1,
-    "deadline": "2021-04-14 08:30",
-    "completed": 1,
-    "user": 1
+    "idQuestion": 59,
+     "label": "For each company, show the…"
 }]
+Error responses: 500 Internal Server Error (generic error)
 
 
-- POST `/api/login`
-  - request parameters and request body content
-  - response body content
-- GET `/api/something`
-  - request parameters
-  - response body content
-- POST `/api/something`
-  - request parameters and request body content
-  - response body content
-- ...
+### Add a new answer
+HTTP method: POST URL: /api/answer
+Description: Add a new answer for a given survey
+Request body:  task idAnswer  value is not required and is ignored)
+{
+    "name": "Play hockey",
+    "idSurvey": 1,
+    "response ": {55:['gabino 2021']},
+   
+}
+Response: 200 OK (success)
+
+Response body: none
+
+Error responses: 422 Unprocessable Entity (values do not satisfy validators), 503 Service Unavailable (database error)
+
+
+
 
 ## Database Tables
 
@@ -199,7 +221,7 @@ Response body: One object describing the required task:
 
 
 
-(only _main_ components, minor ones may be skipped)
+
 
 ## Screenshot
 
