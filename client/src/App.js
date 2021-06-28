@@ -68,11 +68,8 @@ function App() {
                    return loggedIn ? <MySurvey />:  <Login setLoggedIn={setLoggedIn} setUsername={setUsername} />
                   }} />
 
-                  <Route path="/viewResponses/survey/:idsurvey" render={({ match }) =>{
-                    // to protect from invalid urls (e.g. /tasks/foo)
-                    const editSurvey = ListOfSurveys.filter(surv => surv.idSurvey == match.params.idsurvey );
-                    return editSurvey.length? 
-                    <ConsultResponse key={match.params.idsurvey} idSurvey={match.params.idsurvey} />: <Redirect to='' />}
+                  <Route path="/viewResponses/survey/:idsurvey" render={({ match }) =>
+                    <ConsultResponse key={match.params.idsurvey} idSurvey={match.params.idsurvey} />
                   } />
 
                    

@@ -32,7 +32,7 @@ exports.validatequestionText = [
 ]
 
 exports.answer = [
-  check('name').isAlphanumeric().isLength({min:1}),
+  check('name').isLength({min:1}),
   check('responses').isObject(),
   check("idSurvey").isNumeric()
 ]

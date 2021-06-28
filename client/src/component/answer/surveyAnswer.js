@@ -40,11 +40,12 @@ function SurveyAnswer(props) {
                 if (!user) throw "fill in your name"
                 questions.forEach((question) => {
                     if (question.typeofquestion !== 'Text') {
-                        // console.log(`question.min < Response[question.idQuestion].length`, question.min < Response[question.idQuestion].length)
-                        // if (question.min < Response[question.idQuestion].length
-                        //     || question.max < Response[question.idQuestion].length) {
-                        //     throw (`check answer of question ${question.rank} `)
-                        // }
+                        console.log(`question.min < Response[question.idQuestion].length`, question.min < Response[question.idQuestion].length)
+                        if (question.min > Response[question.idQuestion].length
+                            // || question.max < Response[question.idQuestion].length
+                            ) {
+                            throw (`check answer of question ${question.rank} `)
+                        }
 
                     }
                 })
