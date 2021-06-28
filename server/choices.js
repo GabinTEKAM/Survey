@@ -2,41 +2,24 @@ const db = require("./db");
 
 
 
-exports.choice = (label, idQuestion)=>{ 
-    console.log(`choice`, label)
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO choices(label, idQuestion) VALUES(?,?)';
-        db.run(query, [label.label, idQuestion],  function (err) {
-            if(err){
-                console.log(`err`, err)
-                reject(err);}
-            else
-                resolve(this.lastID);
-        });
-    })
-  }
 
 exports.question=(question, idSurvey)=>{
-    console.log(`question`, question)
-    const {label, questionFlag, rank, typeofquestion }=question
+    const {label, mandatory,  rank, min, max, choices, typeofquestion }=question
     return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO questions(label, questionFlag, idSurvey, rank ) VALUES(?,?,?,?)';
-        db.run(query, [label, questionFlag,idSurvey , rank ],  function (err) {
+        const query = 'INSERT INTO questions(label, mandatory, idSurvey, rank, min, max, choices, typeofquestion ) VALUES(?,?,?,?,?,?,?,?)';
+        db.run(query, [label, parseInt( mandatory), idSurvey, rank, parseInt(min), parseInt(max),JSON.stringify(choices) , typeofquestion],  function (err) {
             if(err){
-                console.log(`err`, err)
                 reject(err);}
             else
-                resolve(this.lastID);
+                resolve(true);
         });
     })
   }
 
 
   exports.survey =(label, idAdmin) => {
-      console.log(`label, idAdmin`, label, idAdmin)
     return new Promise((resolve, reject) => {
         const query = 'INSERT INTO survey (label,idAdmin) VALUES(?,?)';
-        console.log(`db`, db)
         
         db.run(query, [label.label, idAdmin],  function (err) {
             if(err){

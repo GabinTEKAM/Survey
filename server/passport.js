@@ -21,7 +21,6 @@ passport.serializeUser((user, done) => {
   done(null, user.idAdmin);
   });
   
-
   // starting from the data in the session, we extract the current (logged-in) user
 passport.deserializeUser((idAdmin, done) => {
     adminDao.getUserById(idAdmin)

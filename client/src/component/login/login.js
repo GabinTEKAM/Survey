@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import "../css/login.css";
+// import "../css/login.css";
+import "../../css/login.css"
 import { Alert, Button, Card, Form, InputGroup } from 'react-bootstrap';
-import {  Key, PersonCircle, } from 'react-bootstrap-icons';
-import API from '../API/API'
+import { Key, PersonCircle, } from 'react-bootstrap-icons';
+import API from '../../API/API-LOGIN';
 
 function Login(props) {
   const [username, setUsername] = useState('')
@@ -10,21 +11,24 @@ function Login(props) {
   const [validated, setValidated] = useState(false)
   const [ErrorMessage, setErrorMessage] = useState("")
 
+
   const login = (event) => {
     const form = event.currentTarget;
     if (form.checkValidity()) {
-      
       event.preventDefault()
       event.stopPropagation();
-        API.login(username, password)
-        .catch(err=>setErrorMessage(err))
-     
+      API.login(username, password)
+        .then((e)=>{
+          props.setUsername(e)
+        props.setLoggedIn(true)})
+        .catch(setErrorMessage)
+
     }
-    else{
+    else {
       event.preventDefault()
       event.stopPropagation();
     }
-    
+
     setValidated(true)
   }
   return (
@@ -32,15 +36,15 @@ function Login(props) {
     <div className="d-flex justify-content-center h-10">
       <Card>
         <Card.Header>
-          <h3>Login</h3>
+          <h3>Lap's Survey</h3>
         </Card.Header>
         <Card.Body>
           <Form validated={validated} noValidate onSubmit={login}>
-            {ErrorMessage? <Alert variant='danger'>{ErrorMessage}  </Alert>: "" }
+            {ErrorMessage ? <Alert variant='danger'>{ErrorMessage}  </Alert> : ""}
             <Form.Group>
               <InputGroup hasValidation className="mb-3" >
                 <InputGroup.Prepend>
-                  <InputGroup.Text><PersonCircle height={25} /></InputGroup.Text>
+                  <InputGroup.Text><PersonCircle  size={40} /></InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
                   required
@@ -57,7 +61,7 @@ function Login(props) {
             <Form.Group>
               <InputGroup hasValidation className="mb-3" >
                 <InputGroup.Prepend>
-                  <InputGroup.Text ><Key height={25}></Key > </InputGroup.Text>
+                  <InputGroup.Text ><Key  size={40}></Key > </InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
                   required

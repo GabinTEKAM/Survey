@@ -2,15 +2,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
-body{
-background-image: url('http://getwallpapers.com/wallpaper/full/a/5/d/544750.jpg');
-background-size: cover;
 
-background-size: cover;
-background-repeat: no-repeat;
-height: 100%;
-font-family: 'Numans', sans-serif;
-}
 
 
 .card{
@@ -18,19 +10,22 @@ height: 300px;
 margin-top: auto;
 margin-bottom: auto;
 width: 400px;
-background-color: rgba(0,0,0,0.5) !important;
 }
 
 
 .card-header h3{
-color: white;
+color: black;
+text-align: center;
+}
+.card-header{
+    background-color: lightblue;
 }
 
 
 
 .input-group-prepend span{
 width: 50px;
-background-color: #FFC312;
+background-color:lightblue;
 color: black;
 border:0 !important;
 }
@@ -43,7 +38,7 @@ box-shadow: 0 0 0 0 !important;
 
 .login_btn{
 color: black;
-background-color: #FFC312;
+background-color: lightblue;
 width: 100px;
 }
 
