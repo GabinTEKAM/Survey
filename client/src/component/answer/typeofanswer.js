@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { Form } from 'react-bootstrap';
 
 
@@ -6,21 +6,24 @@ import { Form } from 'react-bootstrap';
 
 
 function CheckboxAnswer(props) {
-    let { index, setResponse, question } = props
-    let { choices, idQuestion, label } = question
+    let {  setResponse, question } = props
+    let { choices, idQuestion, label, min , max } = question
     const [isChecked, setIsChecked] = useState(Array(JSON.parse(choices).length).fill(false))
-    const handleCheckBox = async (indexC, index, event) => {
-        await setResponse(old => {
-            let modifyItem = { ...old[index] }
-            let indexBox = modifyItem.values.indexOf(event.target.value)
-            if (indexBox >= 0)
-                modifyItem.values = [...modifyItem.values.slice(0, indexBox), ...modifyItem.values.slice(indexBox + 1)]
+    const handleCheckBox = (indexC, event) => {
+        setResponse(old => {
+            let modifyItem = old[idQuestion]
+            let choice = {}
+            let indexBox = modifyItem.indexOf(event.target.value)
+            if (indexBox >= 0) {
+                modifyItem = [...modifyItem.slice(0, indexBox), ...modifyItem.slice(indexBox + 1)]
+                choice[idQuestion] = modifyItem
+            }
+            else {
+                modifyItem = [...modifyItem, event.target.value];
+                choice[idQuestion] = modifyItem
+            }
 
-            else
-                modifyItem.values = [...modifyItem.values, event.target.value];
-
-            modifyItem.idQuestion = idQuestion
-            return [...old.slice(0, index), modifyItem, ...old.slice(index + 1)]
+            return {...old, ...choice}
         })
         setIsChecked(old => old.map((value, index) => index === indexC ? !value : value))
     }
@@ -30,12 +33,12 @@ function CheckboxAnswer(props) {
     return (<>
         {choices.map((choice, indexC) =>
             <Form.Check key={indexC}  >
-                <Form.Check.Input required={ !isChecked.includes(true)? question.mandatory : false }
-                    type='checkbox'
+                <Form.Check.Input required={!isChecked.includes(true) ? question.mandatory : false}
+                    type='checkbox' min = {min} max= {max}
                     name={label}
                     value={choice}
                     checked={isChecked[indexC]}
-                    onChange={event => handleCheckBox(indexC, index, event)}
+                    onChange={event => handleCheckBox(indexC, event)}
                 />
                 <Form.Check.Label>{choice} </Form.Check.Label>
             </Form.Check>
@@ -46,28 +49,28 @@ function CheckboxAnswer(props) {
 
 
 function RadioAnswer(props) {
-    let { index, setResponse, question  } = props
+    let {  setResponse, question } = props
+    const [isChecked, setIsChecked] = useState(false)
     let { choices, idQuestion, label, min, max } = question
-    const radioAnswer = (value) => {
+    const radioAnswer = (event) => {
         setResponse(old => {
-            let modifyItem = { ...old[index] }
-            modifyItem.values = [value]
-            modifyItem.idQuestion = idQuestion
-            return [...old.slice(0, index), modifyItem, ...old.slice(index + 1)]
+            let modifyItem = {}
+            modifyItem[idQuestion] = [event.target.value]
+            return { ...old,  ...modifyItem }
         })
+        setIsChecked(true)
     }
-
 
     choices = JSON.parse(choices)
     return (
         <div>
-            {   
+            {
                 choices.map((choice, indexC) =>
                     <Form.Check key={indexC}  >
-                        <Form.Check.Input required name={label} type='radio'
-                            value={choice}
-                            required={question.mandatory}
-                            onChange={ev => radioAnswer(ev.targert.value)}
+                        <Form.Check.Input  name={label} type='radio'
+                            value={choice} min={min} max= {max}
+                            required={!isChecked? question.mandatory:false}
+                            onChange={ev => radioAnswer(ev)}
                         />
                         <Form.Check.Label>{choice} </Form.Check.Label>
                     </Form.Check>
@@ -80,19 +83,17 @@ function RadioAnswer(props) {
 
 
 function TextAnswer(props) {
-    const { setResponse, index, idQuestion } = props
+    const { setResponse, question } = props
+    const {idQuestion, mandatory}= question
     const TextAnswer = (event) => {
         setResponse(old => {
-            let modifyItem = { ...old[index] }
-            modifyItem.values = [event.target.value]
-            modifyItem.idQuestion = idQuestion
-            return [...old.slice(0, index), modifyItem, ...old.slice(index + 1)]
+            old[idQuestion] = [event.target.value]
+            return { ...old }
         })
     }
-
     return (
         <>
-            <Form.Control type="text" maxLength={200} placeholder="name@example.com"
+            <Form.Control as="textarea" maxLength={200} placeholder="name@example.com"   required = {mandatory}
                 onChange={ev => TextAnswer(ev)} />
         </>
     );

@@ -9,6 +9,7 @@ import APISURVEY from './API/API-SURVEY';
 import { UserContext } from './userContext';
 import API from './API/API-LOGIN';
 import {MySurvey, ListOfSurvey} from './component/answer/lisofsurvey'
+import ConsultResponse from './component/answer/consultResponse';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -27,7 +28,7 @@ function App() {
 
   useEffect(() => {
     const getSurvey = async () => {
-      const set = await APISURVEY.getSurveys().then(res => {
+    await APISURVEY.getSurveys().then(res => {
         setListOfSurveys([...res])
       })
       setLoading(true)
@@ -58,18 +59,22 @@ function App() {
                    return loggedIn ?<Redirect to= 'mysurvey' />:  <Login setLoggedIn={setLoggedIn} setUsername={setUsername} />
                   }}>
 
-
                   </Route>
-                  <Route exact path="/survey/:filter" render={({ match }) =>{
-                    // to protect from invalid urls (e.g. /tasks/foo)
-                    const editSurvey = ListOfSurveys.find(surv => surv.idSurvey == match.params.filter );
-                    return editSurvey? 
-                    <SurveyAnswer idSurvey={match.params.filter} />: <Redirect to='' />}
+                  <Route  path="/survey/:idsurvey" render={({ match }) =>
+                    <SurveyAnswer idSurvey={match.params.idsurvey} ListOfSurveys={ListOfSurveys} />
                   } />
 
-                  <Route path='/mysurvey'render={() => {
+                  <Route path='/mysurvey' render={() => {
                    return loggedIn ? <MySurvey />:  <Login setLoggedIn={setLoggedIn} setUsername={setUsername} />
                   }} />
+
+                  <Route path="/viewResponses/survey/:idsurvey" render={({ match }) =>{
+                    // to protect from invalid urls (e.g. /tasks/foo)
+                    const editSurvey = ListOfSurveys.filter(surv => surv.idSurvey == match.params.idsurvey );
+                    return editSurvey.length? 
+                    <ConsultResponse key={match.params.idsurvey} idSurvey={match.params.idsurvey} />: <Redirect to='' />}
+                  } />
+
                    
 
                 </Switch>
@@ -89,3 +94,4 @@ function App() {
 }
 
 export default App;
+

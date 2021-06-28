@@ -1,32 +1,76 @@
 import axios from "axios";
 
 const getSurveys = async () => {
+    try {
+        const response = await axios.get('/api/survey',)
+        if (response.statusText === 'OK')
 
-    const response = await axios.get('/api/survey',)
-    // if (response.statusText !== 'OK')
-        return  response.data
-    // else
-    //     throw response.data
-
-
-}
-const getQuestions = async(idSurvey) =>{
-    const response = await axios.get(`/api/questions/${idSurvey}`)
-    return response.data
-}
-
-const getMySurvey = async()=>{
-    const response = await axios.get(`/api/mysurveys`)
-    return response.data
-}
-const saveUser = async(name)=>{
-    const response = await axios.post(`/api/user`, name)
-    return response.data
-}
-const saveanswer = async(answer)=>{
-    const response = await axios.post(`/api/answer`, answer)
-    return response.data
+            return response.data
+    } catch (error) {
+        if (error.response) {
+            throw (error.response.data);
+        }
+    }
 }
 
 
-export default { getSurveys, getQuestions, getMySurvey, saveUser, saveanswer}
+const getQuestions = async (idSurvey) => {
+    try {
+        const response = await axios.get(`/api/questions/${idSurvey}`)
+        if (response.statusText === 'OK')
+            return response.data
+    } catch (error) {
+        if (error.response)
+            throw (error.response.data.error);
+    }
+
+}
+
+const getQuestionsLabel = async (idSurvey) => {
+    try {
+        const response = await axios.get(`/api/questionsofsurvey/${idSurvey}`)
+        if (response.statusText === 'OK')
+            return response.data
+    } catch (error) {
+        if (error.response)
+            throw (error.response.data.error);
+    }
+
+}
+
+const getUserAnswers = async (idSurvey) => {
+    try {
+        const response = await axios.get(`/api/getuseranswers/${idSurvey}`)
+        if (response.statusText === 'OK')
+            return response.data
+    } catch (error) {
+        if (error.response)
+            throw (error.response.data);
+    }
+}
+
+const getMySurvey = async () => {
+    try {
+        const response = await axios.get(`/api/mysurveys`)
+        if (response.statusText === 'OK')
+            return response.data
+    } catch (error) {
+        if (error.response)
+            throw (error.response.data);
+    }
+}
+
+const saveanswer = async (answer) => {
+    try {
+        const response = await axios.post(`/api/answer`, answer)
+        if (response.statusText === 'OK')
+            return response.data
+    } catch (error) {
+        if (error.response)
+            throw (error.response.data.error);
+    }
+}
+
+const APISurvey={ getSurveys, getQuestions, getMySurvey, saveanswer, getUserAnswers, getQuestionsLabel }
+
+export default APISurvey

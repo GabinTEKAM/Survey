@@ -21,7 +21,7 @@ function Login(props) {
         .then((e)=>{
           props.setUsername(e)
         props.setLoggedIn(true)})
-        .catch(err => setErrorMessage(err))
+        .catch(setErrorMessage)
 
     }
     else {
@@ -36,7 +36,7 @@ function Login(props) {
     <div className="d-flex justify-content-center h-10">
       <Card>
         <Card.Header>
-          <h3>Login</h3>
+          <h3>Lap's Survey</h3>
         </Card.Header>
         <Card.Body>
           <Form validated={validated} noValidate onSubmit={login}>
@@ -44,7 +44,7 @@ function Login(props) {
             <Form.Group>
               <InputGroup hasValidation className="mb-3" >
                 <InputGroup.Prepend>
-                  <InputGroup.Text><PersonCircle height={25} /></InputGroup.Text>
+                  <InputGroup.Text><PersonCircle  size={40} /></InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
                   required
@@ -61,7 +61,7 @@ function Login(props) {
             <Form.Group>
               <InputGroup hasValidation className="mb-3" >
                 <InputGroup.Prepend>
-                  <InputGroup.Text ><Key height={25}></Key > </InputGroup.Text>
+                  <InputGroup.Text ><Key  size={40}></Key > </InputGroup.Text>
                 </InputGroup.Prepend>
                 <Form.Control
                   required

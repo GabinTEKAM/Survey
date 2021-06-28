@@ -24,7 +24,7 @@ function Maximun(props) {
     return (
         <div className="survey-group">
 
-            <Form.Control type='number' min='1' max="10"
+            <Form.Control type='number' min='0' max="10"
                 required
                 bsPrefix="form-control required"
                 name='max'

@@ -23,7 +23,6 @@ function Username(props) {
     return (
         <>
 
-
             <Modal
                 show={show}
                 onHide={handleClose}
@@ -32,13 +31,14 @@ function Username(props) {
                 aria-labelledby="contained-modal-title-vcenter"
                 centered
             >
-                <Modal.Header >
+                <Modal.Header closeButton >
                     <Modal.Title>Enter your Name</Modal.Title>
                 </Modal.Header>
                 <Form noValidate validated={validated} onSubmit={handleSubmit}>
                     <Modal.Body>
                         <Form.Control placeholder="Enter your name to continue "
-                            required bsPrefix="form-control required"
+                            required bsPrefix="form-control required" 
+                            
                             onChange={ev => props.setUser(ev.target.value)} />
                         <Form.Control.Feedback type='invalid'>Enter your name to continue </Form.Control.Feedback>
                     </Modal.Body>
@@ -47,12 +47,12 @@ function Username(props) {
 
                             <Link to='/mysurvey' >
                                 <Button variant="danger" onClick={handleClose}>
-                                    back
+                                    Back to main
                                 </Button>
                             </Link> :
                             <Link to='/'>
                                 <Button variant="danger" onClick={handleClose}>
-                                    back
+                                    Back to main
                                 </Button>
                             </Link>
                         }
@@ -69,42 +69,42 @@ function Username(props) {
 function ConFrmModal(props) {
     const context = useContext(UserContext);
     return (
-        <>
 
 
-            <Modal
-                show={true}
-                backdrop="static"
-                keyboard={false}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-            >
-                <Modal.Header >
-                    <Modal.Title>Enter your Name</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {props.message}
-                </Modal.Body>
-                <Modal.Footer>
-                    {context.loggedIn ?
 
-                        <Link to='/mysurvey' >
-                            <Button variant="primary" >
-                                OK
-                            </Button>
-                        </Link> :
-                        <Link to='/'>
-                            <Button variant="primary" >
-                                OK
-                            </Button>
-                        </Link>
-                    }
+        <Modal
+            show={true}
+            backdrop="static"
+            keyboard={false}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header >
+                <Modal.Title>Lap's Survey Confirmation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {props.message}
+            </Modal.Body>
+            <Modal.Footer>
+                {context.loggedIn ?
 
-                </Modal.Footer>
-            </Modal>
-        </>
+                    <Link to='/mysurvey' >
+                        <Button variant="primary" >
+                            OK
+                        </Button>
+                    </Link> :
+                    <Link to='/'>
+                        <Button variant="primary" >
+                            OK
+                        </Button>
+                    </Link>
+                }
+
+            </Modal.Footer>
+        </Modal>
+
     );
 }
 
 
-export  {Username, ConFrmModal};
+export { Username, ConFrmModal };

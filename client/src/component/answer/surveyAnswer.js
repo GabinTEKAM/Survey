@@ -1,27 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import AnswerBody from './answerbody';
 import { Form, Button, Alert } from 'react-bootstrap';
-import answerSubmission from './SubmitAswer';
 import APISURVEY from '../../API/API-SURVEY';
 import { ConFrmModal, Username } from './modal';
+import { useLocation } from 'react-router-dom';
 
 
 function SurveyAnswer(props) {
-    const { idSurvey } = props
+    const location = useLocation()
+    const { idSurvey, } = props
+    const surveyLabel =useState(location.state?location.state:'')
     const [questions, setQuestions] = useState([])
     const [user, setUser] = useState("")
     const [submitted, setSubmitted] = useState(false);
     const [loading, setLoading] = useState(false)
-    const [Response, setResponse] = useState(Array(questions.length).fill({ "idQuestion": null, 'values': [] }))
+    const [Response, setResponse] = useState({})
     const [validated, setValidated] = useState(false)
     const [Errormessage, setErrormessage] = useState('')
+    const [submissionMessage, setSubmissionMessage] = useState('');
 
     const getQuestion = (idSurvey) => {
         APISURVEY.getQuestions(idSurvey).then(quest => {
             setQuestions(quest)
             setLoading(true)
-            setResponse(Array(quest.length).fill({ "idQuestion": null, 'values': [] }))
-
+            let c = {}
+            quest.forEach(question => c[question.idQuestion] = [])
+            setResponse(c)
         })
     }
 
@@ -31,40 +35,31 @@ function SurveyAnswer(props) {
         event.stopPropagation()
         const form = event.currentTarget
         if (form.checkValidity()) {
-            event.preventDefault()
-            event.stopPropagation()
+            setErrormessage('')
             try {
                 if (!user) throw "fill in your name"
-                Response.forEach((res, index) => {
+                questions.forEach((question) => {
+                    if (question.typeofquestion !== 'Text') {
+                        // console.log(`question.min < Response[question.idQuestion].length`, question.min < Response[question.idQuestion].length)
+                        // if (question.min < Response[question.idQuestion].length
+                        //     || question.max < Response[question.idQuestion].length) {
+                        //     throw (`check answer of question ${question.rank} `)
+                        // }
 
-                    if (res.idQuestion) {
-                        let question = questions[index]
-                        if (question.typeofquestion !== 'Text') {
-
-
-                            if (question.min > res.values.length || question.max < res.values.length) {
-                                throw `check answer of question ${question.rank} `
-                            }
-                        }
                     }
                 })
-                console.log(`Response`, Response)
-                const responses = Response.filter(res => res.idQuestion ? res : "")
-                console.log(`Response`, Response)
-                answerSubmission({ name: user, responses: responses })
+                APISURVEY.saveanswer({ name: user, responses: Response, idSurvey: idSurvey })
                     .then(() => {
-                        setErrormessage(`Mr/Mme ${user} thank you for your participation 
+                        setSubmissionMessage(`Mr/Mme ${user} thank you for your participation 
                 Your Response Was saved with success`)
                         setSubmitted(true)
-                    })
-            } catch (error) {
+                    }).catch(error => setSubmissionMessage("POST error please try again later"))
+                setSubmitted(true)
+            }
+            catch (error) {
                 setErrormessage(error)
             }
 
-        }
-        else {
-            event.preventDefault()
-            event.stopPropagation()
         }
         setValidated(true)
     }
@@ -75,18 +70,22 @@ function SurveyAnswer(props) {
 
     return (
         <div>
-            {submitted && <ConFrmModal message={Errormessage} />}
+            {submitted && <ConFrmModal message={submissionMessage} />}
             {loading ? <>
                 {Errormessage ? <Alert variant='danger'>{Errormessage}  </Alert> : ""}
-                <Username setUser={setUser} />
+              
+
+                <div className= 'survey-title'> 
+                  <h1>{surveyLabel}</h1> 
+                </div><span className='indice' >fields mandatories are marked with *</span> 
                 <Form sm={3} validated={validated} noValidate onSubmit={handleSubmit} >
+                    <Username setUser={setUser} user={user} />
                     {questions.map((question, index) =>
 
                         <AnswerBody key={index} index={index} question={question}
                             setResponse={setResponse} />)}
 
-                    <Button variant="success" type='submit'>Submit</Button>
-
+                    <Button variant="success" type='submit' className='submit' >Submit</Button>
                 </Form>
 
             </> : "loadign"}

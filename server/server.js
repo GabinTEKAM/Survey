@@ -1,12 +1,12 @@
 'use strict';
-const {surveyValidation , validate,  validatequestionText, choiceValidation } = require('./validator.js')
+const { surveyValidation, validate, validatequestionText, choiceValidation, answer, Surveytitle } = require('./validator.js')
 const express = require('express');
 const session = require('express-session');
 const morgan = require('morgan');
 const surveyDao = require('./choices');
 
 //configured passport 
-const  passport  = require('./passport');
+const passport = require('./passport');
 const surveyAnswer = require('./surveyAnswer.js');
 
 // init express
@@ -28,9 +28,10 @@ app.use(passport.session());
 //set-up the middleware
 // custom middleware: check if a given request is coming from an authenticated user
 const isLoggedIn = (req, res, next) => {
-  if (req.isAuthenticated()){
- 
-    return next();}
+  if (req.isAuthenticated()) {
+
+    return next();
+  }
   return res.status(401).json({ error: 'not authenticated' });
 }
 
@@ -38,27 +39,25 @@ const isLoggedIn = (req, res, next) => {
 
 
 // Users APIs 
-
 //login 
-app.post('/api/login', function(req, res, next) {
+app.post('/api/login', function (req, res, next) {
   passport.authenticate('local', (err, user, info) => {
-    if (err){
-      return next(err);}
-      if (!user) {
-        // display wrong login messages
-        console.log('gabin')
-        return res.status(401).send(info);
-      }
-      // success, perform the login
-      req.login(user, (err) => {
-        if (err)
-          return next(err);
-        
-        // req.user contains the authenticated user, we send all the user info back
-        // this is coming from userDao.getUser()
-        console.log(`req.user.name`, req.user.name)
-        return res.json(req.user.name);
-      });
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      // display wrong login messages
+      return res.status(401).send(info);
+    }
+    // success, perform the login
+    req.login(user, (err) => {
+      if (err)
+        return next(err);
+
+      // req.user contains the authenticated user, we send all the user info back
+      // this is coming from userDao.getUser()
+      return res.json(req.user.name);
+    });
   })(req, res, next);
 });
 
@@ -69,128 +68,102 @@ app.delete('/api/sessions/current', (req, res) => {
   res.end();
 });
 
-// GET /sessions/current
-// check whether the user is logged in or not
-app.get('/api/sessions/current', (req, res) => {
-  if(req.isAuthenticated()) {
-    res.send(req.user.name);}
-  else
-    res.status(401).send({error: 'Unauthenticated user!'});;
-});
 
 /**
  * routes for saving survey information
  */
-app.post("/api/survey",isLoggedIn, (req, res) => {
+app.post("/api/survey", isLoggedIn,Surveytitle, validate, (req, res) => {
   // first I will pick the Id of admin to pass to request
-  surveyDao.survey(req.body,req.user.idAdmin)
+  surveyDao.survey(req.body, req.user.idAdmin)
     .then(result => {
       res.json(result)
     })
-    .catch(err => {
-      console.log(`err`, err)
-      res.status(500).send(err)
+    .catch(error => {
+      res.status(500).send(error)
     })
 })
 
-app.post("/api/question",isLoggedIn, validatequestionText, validate,  (req, res) => {
-  surveyDao.question(req.body.question, req.body.idSurvey)
-    .then(result => {
-      res.json(result)
-    })
-    .catch(err => {
-      res.status(500).send(err)
+app.post("/api/question", isLoggedIn, validatequestionText, validate, (req, res) => {
+ surveyDao.question(req.body.question, req.body.idSurvey)
+    .then(res.send())
+    .catch(error => {
+      res.status(500).send(error)
     })
 
 })
 
-app.post("/api/questionchoice",isLoggedIn, choiceValidation, validate, (req, res) => {
+app.post("/api/questionchoice", isLoggedIn, choiceValidation, validate, (req, res) => {
   surveyDao.question(req.body.question, req.body.idSurvey)
     .then(result => {
       res.json(result)
     })
-    .catch(err => {
-      console.log(`err`, err)
-      res.status(500).send(err)
+    .catch(error => {
+      res.status(500).send(error)
     })
-
 })
 
 //get all the surveys
-app.get('/api/survey',(req, res)=>{
+app.get('/api/survey', (req, res) => {
   surveyAnswer.getSurvey()
-  .then( task => {
-      if(!task)
-          res.status(404).send();
-       else 
-          res.json(task);
+    .then(survey => {
+      if (!survey)
+        res.status(404).send();
+      else
+        res.json(survey);
 
-  }).catch(err => res.status(500).json(err));
+    }).catch(error => res.status(500).json(error));
 })
 
-//get list of survey
-app.get('/api/mysurveys',isLoggedIn,(req,res) => {
-  console.log(`req.user`, req.user)
+//get list of surveyisLoggedIn,req.user.idAdmin
+app.get('/api/mysurveys', isLoggedIn, (req, res) => {
   surveyAnswer.mySurveys(req.user.idAdmin)
-  .then( survey => {
-      if(!survey)
-          res.status(404).send();
-       else 
-          res.json(survey);})
+    .then(survey => {
+      if (!survey)
+        res.status(404).send();
+      else
+        res.json(survey);
+    })
+    .catch(error => res.status(500).json(error))
 })
 
-app.get('/api/getuseranswers/:idSurvey',(req,res) => {
+app.get('/api/getuseranswers/:idSurvey', isLoggedIn,(req, res) => {
   surveyAnswer.getUserAnswers(req.params.idSurvey)
-  .then( survey => {
-      if(!survey)
-          res.status(404).send();
-       else 
-          res.json(survey);})
+    .then(survey => {
+      if (!survey)
+        res.status(404).send();
+      else
+        res.json(survey);
+    })
+    .catch(error =>{
+      res.status(500).json(error)
+    })
 }
 )
 
 //get all the questions of a related giveen Id
 
-app.get('/api/questions/:id',(req, res)=>{
-  console.log(`req.params.id`, req.params.id)
+app.get('/api/questions/:id', (req, res) => {
   surveyAnswer.getQuestions(req.params.id)
-  .then( survey => {
-    console.log(`server`, survey)
-      if(!survey)
-          res.status(404).send();
-       else 
-          res.json(survey);
-
-  }).catch(err =>{
-    console.log(`errfake`, err)
-    res.status(500).json(err)});
+    .then(survey => 
+        res.json(survey))
+    .catch(error => res.status(500).json(error) )
 })
 
-//store username
-app.post('/api/user', (req, res)=>{
-  surveyAnswer.user(req.body.name)
-    .then(result => {
-      res.json(result)
+// get all ids and label ogf questions for a given IDsurvey
+app.get('/api/questionsofsurvey/:id', (req, res) => {
+  surveyAnswer.getQuestionsOfSurvey(req.params.id)
+    .then(survey => {
+        res.json(survey);
     })
-    .catch(err => {
-      console.log(`err`, err)
-      res.status(500).send(err)
-    })
+    .catch(error => res.status(500).json(error) )
+})
 
-}
-)
+app.post('/api/answer',answer, validate, (req, res) => {
+  const { name, idSurvey, responses } = req.body
 
-app.post('/api/answer', (req, res)=>{
-  console.log(`req.body`, req.body)
-  surveyAnswer.answer (req.body.idUser, req.body.response )
-    .then(result => {
-      res.json(result)
-    })
-    .catch(err => {
-      console.log(`err`, err)
-      res.status(500).send(err)
-    })
-
+  surveyAnswer.answer(name, idSurvey, responses)
+    .then(()=>res.send(true))
+    .catch(error => res.status(500).json(error))
 }
 )
 

@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
-import { Listquestions, Submit, Form, Button, Alert, Redirect } from '../exportpkg'
+import { PlusCircleDotted } from 'react-bootstrap-icons';
+import { Listquestions, Submit, Form, Button, Alert, ConFrmModal } from '../exportpkg'
+
+
 
 function Survey(props) {
     //state inititalisation 
     const quest = {
+        id: new Date().getTime(),
         label: '',
         typeofquestion: "Radio",
         rank: "",
         min: '',
         max: "",
-        mandatory: false,
+        mandatory: 0,
         choices: [""]
     }
     const [surveyTitle, setSurveyTitle] = useState('')
@@ -17,7 +21,9 @@ function Survey(props) {
     const [validated, setValidated] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [submitted, setSubmitted] = useState(false)
+    const [submissionMessage, setSubmissionMessage] = useState("")
     const addQuestion = () => {
+
         setQuestions(old => [...old, quest])
     }
 
@@ -27,38 +33,36 @@ function Survey(props) {
         let questionChoice = []
         const form = event.currentTarget;
         if (form.checkValidity()) {
-
             event.preventDefault()
             event.stopPropagation()
             questions.forEach((question, index) => {
-                if (question.typeofquestion === 'Text') {
-                    question.rank = index
+               
+                question.rank = index + 1
+                if (question.typeofquestion === 'Text')
                     questionText.push(question)
-                } else {
-                    question.rank = index
+                else
                     questionChoice.push(question)
-                }
             })
-
-
 
             try {
                 questionChoice.forEach(question => {
-
-                    if (parseInt(question.min) > parseInt(question.max) || parseInt(question.min) < 0) {
-                        throw ("Your Survey have an incorrect closed quesdion ")
-                    }
+                    if (parseInt(question.min) > parseInt(question.max) || parseInt(question.min) < 0)
+                        throw   ("Your Survey have an incorrect closed quesdion ")
                     else
                         Submit.setFlag(question)
-
                 }
                 )
                 Submit.SubmitSurvey({ surveyTitle, questionText, questionChoice })
-                    .then(setSubmitted(true))
+                    .then(() => { 
+                        setSubmissionMessage('survey created with success')
+                        setSubmitted(true)})
+                    .catch(error=> {
+                        setSubmitted(true)
+                        setSubmissionMessage('impossible to create your survey please try agai')
+                    })
             } catch (error) {
                 setErrorMessage(error)
             }
-
         }
 
         else {
@@ -71,7 +75,7 @@ function Survey(props) {
 
 
     return (<>
-        {submitted && <Redirect to='/mysurvey' />}
+        {submitted && <ConFrmModal message={submissionMessage} />}
         <Form sm={3} validated={validated} noValidate onSubmit={handleSubmit} >
             {errorMessage ? <Alert variant="danger"> {errorMessage} </Alert> : ''}
             <Form.Group >
@@ -79,10 +83,10 @@ function Survey(props) {
                 <Form.Control placeholder='text' required type='text' value={surveyTitle} onChange={ev => setSurveyTitle(ev.target.value)} />
             </Form.Group>
             <Listquestions questions={questions} setQuestions={setQuestions} />
-            <Button variant="success" type='submit'>Submit</Button>
+            <Button variant="success" type='submit' className='submit'>Submit</Button>
         </Form>
-        <Button variant="success" size="lg" className="fixed-right-bottom" onClick={addQuestion}>&#43;</Button>
-       
+            <i onClick={addQuestion} title="add question" > < PlusCircleDotted className='fa fa-plus my-float float' size='40' /></i> 
+         
     </>
     );
 }

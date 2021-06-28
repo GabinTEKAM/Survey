@@ -6,7 +6,7 @@ import APISURVEY from '../../API/API-SURVEY';
 function ListOfSurvey(props) {
     const { ListOfSurveys } = props
     return (
-        <Table  striped bordered hover responsive>
+        <Table  striped bordered hover responsive size='md'>
             <TableHeader />
             <tbody>
                 {ListOfSurveys.map((survey, index) =>
@@ -25,8 +25,8 @@ function MySurvey(props) {
 
     useEffect(() => {
         const getSurvey = async () => {
-            const set = await APISURVEY.getMySurvey().then(res => {
-                setMySurveys([...res])
+            await APISURVEY.getMySurvey().then(res => {
+                setMySurveys(res)
             })
             setLoading(true)
         }

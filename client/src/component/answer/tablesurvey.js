@@ -26,10 +26,10 @@ function TableRow(props) {
         <td>{label}</td>
         {context.loggedIn?<>
           <td>{numberofanswers} </td>
-          <td> <Link to={{pathname:`/survey/${idSurvey}`}} > <Pen />{idSurvey} </Link></td>
-        </> :
-        <td> <Link to={{pathname:`/survey/${idSurvey}`}} > <Pen />{idSurvey} </Link></td>
-        }
+         <td> { numberofanswers>0 && <Link to={{pathname:`/viewResponses/survey/${idSurvey}`, state: label}} > <Pen /></Link>}</td>
+        </> :<>
+          <td> <Link to={{pathname:`/survey/${idSurvey}`, state: label}} > <Pen /> </Link></td>
+       </> }
         
       </tr>
     );
