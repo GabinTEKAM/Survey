@@ -4,6 +4,8 @@ const express = require('express');
 const session = require('express-session');
 const morgan = require('morgan');
 const surveyDao = require('./choices');
+const path = require('path');
+
 
 //configured passport 
 const passport = require('./passport');
@@ -11,7 +13,7 @@ const surveyAnswer = require('./surveyAnswer.js');
 
 // init express
 const app = new express();
-const port = 3001;
+const port = process.env.PORT ||3001;
 
 app.use(morgan('dev'))
 app.use(express.json())
@@ -167,7 +169,10 @@ app.post('/api/answer',answer, validate, (req, res) => {
 }
 )
 
-
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+ });
+ 
 
 
 
